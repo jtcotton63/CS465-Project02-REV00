@@ -33,8 +33,9 @@ public class CollideWrapper {
                     Collision toBeAdded = new Collision();
                     toBeAdded.bitSize = bitSizes.get(i);
                     toBeAdded.numAttempts = numRoundsForString;
-                    toBeAdded.str1 = ;
-                    toBeAdded.str2 = randomString;
+                    List<String> matches = getKeyFromValue(digestsOfStrings, digest);
+                    toBeAdded.strings = matches;
+                    toBeAdded.strings.add(randomString);
                     bitSizeToNumberOfRoundsNeededToFindACollision.get(bitSizes.get(i)).add((toBeAdded));
                     numRoundsForString = 0;
                 }
@@ -42,6 +43,15 @@ public class CollideWrapper {
                 numRoundsForString++;
             }
         }
+    }
+
+    private static List<String> getKeyFromValue(Map<String,Integer> map, int value) {
+        List<String> results = new ArrayList<>();
+        for(Map.Entry entry: map.entrySet()) {
+            if((int) entry.getValue() == value)
+                results.add((String) entry.getKey());
+        }
+        return results;
     }
 
 

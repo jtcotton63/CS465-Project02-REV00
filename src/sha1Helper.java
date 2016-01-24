@@ -15,11 +15,6 @@ public class sha1Helper {
         d.reset();
         d.update(input.getBytes());
         byte[] digest = d.digest();
-        byte[] temp = new byte[20];
-        for(int i = 0; i < 20; i++){
-            temp[i] = -128;
-        }
-        assert cutDigestToNumBitsLength(temp, 10) == 32896;
         return cutDigestToNumBitsLength(digest, numBits);
     }
 
