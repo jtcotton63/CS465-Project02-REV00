@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**
@@ -9,21 +11,21 @@ public class CollideWrapper {
         Map<String,Integer> digestsOfStrings = new HashMap<>();
         // All the bitsizes to test - 10, 13, ...
         List<Integer> bitSizes = new ArrayList<>();
-        // BitSize: 10, Number of rounds needed to find a collision: 300, 301, 405
-        Map<Integer,List<Collision>> bitSizeToNumberOfRoundsNeededToFindACollision = new HashMap<>();
+        // BitSize: 10, Number of rounds needed to find a collision
+        Map<Integer,List<Collision>> bitSizesToCollisions = new HashMap<>();
 
         while(bitSizes.size() != 10) {
             Random random = new Random();
-            int i = random.nextInt() % 32;
+            int i = random.nextInt(25);
             if(i > 10 && !bitSizes.contains(i))
                 bitSizes.add(i);
         }
 
         for(int i = 0; i < bitSizes.size(); i++) {
             int numRoundsForString = 1;
-            bitSizeToNumberOfRoundsNeededToFindACollision.put(bitSizes.get(i), new ArrayList());
+            bitSizesToCollisions.put(bitSizes.get(i), new ArrayList());
 
-            while(bitSizeToNumberOfRoundsNeededToFindACollision.get(bitSizes.get(i)).size() < 3) {
+            while(bitSizesToCollisions.get(bitSizes.get(i)).size() < 3) {
                 String randomString = UUID.randomUUID().toString();
                 int digest = sha1Helper.getSHA1TruncDigest(randomString, bitSizes.get(i));
 
@@ -33,10 +35,29 @@ public class CollideWrapper {
                     Collision toBeAdded = new Collision();
                     toBeAdded.bitSize = bitSizes.get(i);
                     toBeAdded.numAttempts = numRoundsForString;
-                    List<String> matches = getKeyFromValue(digestsOfStrings, digest);
-                    toBeAdded.strings = matches;
+                    toBeAdded.strings = getKeyFromValue(digestsOfStrings, digest);
                     toBeAdded.strings.add(randomString);
-                    bitSizeToNumberOfRoundsNeededToFindACollision.get(bitSizes.get(i)).add((toBeAdded));
+                    bitSizesToCollisions.get(bitSizes.get(i)).add((toBeAdded));
+
+                    // Print out
+                    // output-10-3.txt
+                    System.out.println("********************");
+                    System.out.println(toBeAdded.toString());
+                    System.out.println("********************");
+                    String filename = "output-" + bitSizes.get(i) + "-" + bitSizesToCollisions.get(bitSizes.get(i)).size() + ".txt";
+                    PrintWriter writer = null;
+                    try {
+                         writer = new PrintWriter(filename);
+                        writer.println(toBeAdded.toString());
+                    } catch (FileNotFoundException e) {
+
+                    } finally {
+                        if(writer != null) {
+                            writer.flush();
+                            writer.close();
+                        }
+                    }
+
                     numRoundsForString = 0;
                 }
 
@@ -48,8 +69,10 @@ public class CollideWrapper {
     private static List<String> getKeyFromValue(Map<String,Integer> map, int value) {
         List<String> results = new ArrayList<>();
         for(Map.Entry entry: map.entrySet()) {
-            if((int) entry.getValue() == value)
+            if((int) entry.getValue() == value) {
                 results.add((String) entry.getKey());
+                return results;
+            }
         }
         return results;
     }
