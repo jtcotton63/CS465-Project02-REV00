@@ -22,12 +22,12 @@ public class Main {
         int def23Actual = sha1Helper.getSHA1TruncDigest(def, 23);
         assert def23Actual == def23Expected;
 
-//        List<Integer> bitSizes = CollideWrapper.generateNumBitsArray(11, 25, 10);
-//        List<Collision> foundCollisions =  CollideWrapper.collide(bitSizes, 3);
-//
-//        // Print out
-//        String collisionFilename = "collisions.txt";
-//        printCollisions(collisionFilename, foundCollisions);
+        List<Integer> bitSizes = CollideWrapper.generateNumBitsArray(11, 25, 10);
+        List<Collision> foundCollisions =  CollideWrapper.collide(bitSizes, 3);
+
+        // Print out
+        String collisionFilename = "collisions.txt";
+        printCollisions(collisionFilename, foundCollisions);
 
         List<Integer> bitSizes2 = CollideWrapper.generateNumBitsArray(11, 25, 10);
         List<Collision> foundCollisionsFromPreimage =  PreimageWrapper.preimage(bitSizes2, 3);
