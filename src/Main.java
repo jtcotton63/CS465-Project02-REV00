@@ -22,16 +22,29 @@ public class Main {
         int def23Actual = sha1Helper.getSHA1TruncDigest(def, 23);
         assert def23Actual == def23Expected;
 
-        List<Integer> bitSizes = CollideWrapper.generateNumBitsArray(11, 25, 10);
-        List<Collision> foundCollisions =  CollideWrapper.collide(bitSizes, 3);
+//        List<Integer> bitSizes = CollideWrapper.generateNumBitsArray(11, 25, 10);
+//        List<Collision> foundCollisions =  CollideWrapper.collide(bitSizes, 3);
+//
+//        // Print out
+//        String collisionFilename = "collisions.txt";
+//        printCollisions(collisionFilename, foundCollisions);
+
+        List<Integer> bitSizes2 = CollideWrapper.generateNumBitsArray(11, 25, 10);
+        List<Collision> foundCollisionsFromPreimage =  PreimageWrapper.preimage(bitSizes2, 3);
 
         // Print out
-        String filename = "collisions.txt";
+        String preimageFilename = "preimage.txt";
+        printCollisions(preimageFilename, foundCollisionsFromPreimage);
+
+        System.out.println("Done");
+    }
+
+    private static void printCollisions(String filename, List<Collision> collisions) {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(filename);
-                for(int j = 0; j < foundCollisions.size(); j++)
-                    writer.print(foundCollisions.get(j).toString());
+            for(int j = 0; j < collisions.size(); j++)
+                writer.print(collisions.get(j).toString());
         } catch (FileNotFoundException e) {
 
         } finally {
@@ -40,7 +53,5 @@ public class Main {
                 writer.close();
             }
         }
-
-        System.out.println("Done");
     }
 }
