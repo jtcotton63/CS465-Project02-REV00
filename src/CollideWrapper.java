@@ -7,11 +7,10 @@ public class CollideWrapper {
 
     public static List<Collision> collide(List<Integer> bitSizes, int numDesiredCollisionsPerBitSize) {
         List<Collision> foundCollisions = new ArrayList<>();
-        Map<String,Integer> stringsAndDigests = new TreeMap<>();
 
         for(int i = 0; i < bitSizes.size(); i++) {
+            Map<String,Integer> stringsAndDigests = new TreeMap<>();
             int numBits = bitSizes.get(i);
-//            int numBits = 2;
             int numFoundCollisions = 0;
             int numAttempts = 0;
 
@@ -85,6 +84,4 @@ public class CollideWrapper {
 
         return bitSizes;
     }
-
-
 }
