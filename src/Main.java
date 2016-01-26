@@ -1,7 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by josepher on 1/23/16.
@@ -23,9 +22,8 @@ public class Main {
         int def23Actual = sha1Helper.getSHA1TruncDigest(def, 23);
         assert def23Actual == def23Expected;
 
-        CollideWrapper collideWrapper = new CollideWrapper();
-        List<Integer> bitSizes = collideWrapper.generateNumBitsArray(11, 25, 10);
-        List<Collision> foundCollisions =  collideWrapper.collide(3, bitSizes);
+        List<Integer> bitSizes = CollideWrapper.generateNumBitsArray(11, 25, 10);
+        List<Collision> foundCollisions =  CollideWrapper.collide(bitSizes, 3);
 
         // Print out
         String filename = "collisions.txt";

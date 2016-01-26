@@ -5,60 +5,74 @@ import java.util.*;
  */
 public class CollideWrapper {
 
-    public List<Collision> collide(int numTrialsPerBitSize, List<Integer> bitSizes) {
-        Set<Integer> digestsOfStrings = new HashSet<>();
-        Set<String> triedStrings = new HashSet<>();
+    public static List<Collision> collide(List<Integer> bitSizes, int numDesiredCollisionsPerBitSize) {
         List<Collision> foundCollisions = new ArrayList<>();
+        Map<String,Integer> stringsAndDigests = new TreeMap<>();
 
         for(int i = 0; i < bitSizes.size(); i++) {
-            int numRoundsForString = 1;
-            int numFoundMatches = 0;
+            int numBits = bitSizes.get(i);
+//            int numBits = 2;
+            int numFoundCollisions = 0;
+            int numAttempts = 0;
 
-            while(numFoundMatches < numTrialsPerBitSize) {
-                String randomString = UUID.randomUUID().toString();
-                int digest = sha1Helper.getSHA1TruncDigest(randomString, bitSizes.get(i));
+            while(numFoundCollisions < numDesiredCollisionsPerBitSize) {
+                String random = UUID.randomUUID().toString();
+                int origDigest = sha1Helper.getSHA1TruncDigest(random, numBits);
 
-                // If the digestsOfStrings map contains this as the key,
-                // then this is a collision
-                if(digestsOfStrings.contains(digest)) {
-                    String previousMatch = getMatchingStringForDigest(triedStrings, digest, bitSizes.get(i));
-                    if(previousMatch == null)
-                        throw new RuntimeException("String doesn't have a match");
-                    int digest1 = sha1Helper.getSHA1TruncDigest(previousMatch, bitSizes.get(i));
-                    int digest2 = sha1Helper.getSHA1TruncDigest(randomString, bitSizes.get(i));
-                    if(digest1 != digest2)
-                        throw new RuntimeException("Digests don't match");
+                if(stringsAndDigests.containsValue(origDigest)) {
+                    String match = getMatchingStringForDigest(stringsAndDigests, origDigest);
+                    boolean addCollision = true;
 
-                    Collision toBeAdded = new Collision();
-                    toBeAdded.bitSize = bitSizes.get(i);
-                    toBeAdded.numAttempts = numRoundsForString;
-                    toBeAdded.strings.add(previousMatch);
-                    toBeAdded.strings.add(randomString);
+                    if(match == null) {
+                        System.out.println("No matching string found for digest " + origDigest);
+                        addCollision = false;
+                    } else {
+                        // Test to make sure it's correct
+                        int digest1 = sha1Helper.getSHA1TruncDigest(match, numBits);
+                        int digest2 = sha1Helper.getSHA1TruncDigest(random, numBits);
+                        if(digest1 != digest2) {
+                            System.out.println("The two digests are not equal for these strings:\n" + "\t" + match + "\n\t" + random);
+                            addCollision = false;
+                        }
+                    }
 
-                    foundCollisions.add(toBeAdded);
-                    numRoundsForString = 0;
-                    numFoundMatches++;
+                    if(addCollision) {
+                        Collision toBeAdded = new Collision();
+                        toBeAdded.bitSize = numBits;
+                        toBeAdded.numAttempts = numAttempts;
+                        toBeAdded.strings.add(match);
+                        toBeAdded.strings.add(random);
+                        foundCollisions.add(toBeAdded);
+                        numFoundCollisions++;
+                        numAttempts = 0;
+                    } else {
+                        numAttempts++;
+                    }
                 } else {
-                    numRoundsForString++;
+                    numAttempts++;
                 }
 
-                digestsOfStrings.add(digest);
-                triedStrings.add(randomString);
+                // Regardless if the digest was contained in map's value set,
+                // add the string and the digest to the map
+                stringsAndDigests.put(random, origDigest);
+                if(stringsAndDigests.get(random) != origDigest)
+                    System.out.println("String " + random + " went into map when digest information was incorrect.\n\tOrig: " +
+                            origDigest + "\n\tIn map: " + stringsAndDigests.get(random));
             }
         }
 
         return foundCollisions;
     }
 
-    private String getMatchingStringForDigest(Set<String> triedStrings, int digest, int bitSize) {
-        for(String s: triedStrings) {
-            if(sha1Helper.getSHA1TruncDigest(s, bitSize) == digest)
-                return s;
+    private static String getMatchingStringForDigest(Map<String,Integer> stringsAndDigests, int digest) {
+        for(Map.Entry<String,Integer> entry: stringsAndDigests.entrySet()) {
+            if(entry.getValue() == digest)
+                return entry.getKey();
         }
         return null;
     }
 
-    public List<Integer> generateNumBitsArray(int min, int max, int numElements){
+    public static List<Integer> generateNumBitsArray(int min, int max, int numElements){
         // All the bitsizes to test - 10, 13, ...
         List<Integer> bitSizes = new ArrayList<>();
 
