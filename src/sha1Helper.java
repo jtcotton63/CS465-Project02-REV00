@@ -51,19 +51,6 @@ public class sha1Helper {
         return b & 0xff;
     }
 
-//    private static int convertToSingleInt(int[] bytes) {
-//        int rtn = (int) bytes[0];
-//        for(int i = 1; i < bytes.length; i++) {
-//            rtn = rtn << bitLength((int) bytes[i]);
-//            rtn = rtn | bytes[i];
-//        }
-//        return rtn;
-//    }
-//
-//    private static int bitLength(int value) {
-//        return Integer.SIZE - Integer.numberOfLeadingZeros(value);
-//    }
-
     public static String toHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
