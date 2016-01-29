@@ -44,6 +44,7 @@ public class CollideWrapper {
                         foundCollisions.add(toBeAdded);
                         numFoundCollisions++;
                         numAttempts = 0;
+                        stringsAndDigests = new TreeMap<>();
                     } else {
                         numAttempts++;
                     }
