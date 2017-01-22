@@ -1,8 +1,5 @@
 import java.util.*;
 
-/**
- * Created by josepher on 1/23/16.
- */
 public class CollideWrapper {
 
     public static List<Collision> collide(List<Integer> bitSizes, int numDesiredCollisionsPerBitSize) {

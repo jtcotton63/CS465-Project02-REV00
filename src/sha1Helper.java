@@ -1,9 +1,6 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by josepher on 1/23/16.
- */
 public class sha1Helper {
     public static byte[] getSHA1Digest(String input) {
         MessageDigest d = null;

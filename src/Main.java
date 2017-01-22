@@ -2,9 +2,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
 
-/**
- * Created by josepher on 1/23/16.
- */
 public class Main {
     public static void main(String[] args) {
         // Some tests for proper truncation
