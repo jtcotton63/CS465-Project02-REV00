@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.*;
 
 public class CollideWrapper {
@@ -12,7 +14,7 @@ public class CollideWrapper {
             int numAttempts = 0;
 
             while(numFoundCollisions < numDesiredCollisionsPerBitSize) {
-                String random = ;
+                String random = RandomStringUtils.randomAscii(50);
                 int origDigest = sha1Helper.getSHA1TruncDigest(random, numBits);
 
                 if(stringsAndDigests.containsValue(origDigest)) {
