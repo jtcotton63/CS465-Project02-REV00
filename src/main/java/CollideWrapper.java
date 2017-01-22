@@ -11,7 +11,7 @@ public class CollideWrapper {
             Map<String,Integer> stringsAndDigests = new TreeMap<>();
             int numBits = bitSizes.get(i);
             int numFoundCollisions = 0;
-            int numAttempts = 0;
+            long numAttempts = 0;
 
             while(numFoundCollisions < numDesiredCollisionsPerBitSize) {
                 String random = RandomStringUtils.randomAscii(50);

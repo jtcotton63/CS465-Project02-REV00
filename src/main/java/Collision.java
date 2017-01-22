@@ -4,7 +4,7 @@ import java.util.List;
 public class Collision {
     public int bitSize = -1;
     // The number of attempts that had to be made until a collision was found
-    public int numAttempts = -1;
+    public long numAttempts = -1;
     public List<String> strings = new ArrayList<>();
 
     public String toString() {

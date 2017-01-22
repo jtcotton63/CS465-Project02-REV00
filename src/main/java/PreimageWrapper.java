@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.*;
 
 public class PreimageWrapper {
@@ -8,8 +10,8 @@ public class PreimageWrapper {
         for(int i = 0; i < bitSizes.size(); i++) {
             int numBits = bitSizes.get(i);
             int numFoundCollisions = 0;
-            int numAttempts = 0;
-            String key = UUID.randomUUID().toString();
+            long numAttempts = 0;
+            String key = RandomStringUtils.randomAscii(50);
             int keyDigest = sha1Helper.getSHA1TruncDigest(key, numBits);
 
             while(numFoundCollisions < numDesiredCollisionsPerBitSize) {
