@@ -12,7 +12,7 @@ public class CollideWrapper {
             int numAttempts = 0;
 
             while(numFoundCollisions < numDesiredCollisionsPerBitSize) {
-                String random = UUID.randomUUID().toString();
+                String random = ;
                 int origDigest = sha1Helper.getSHA1TruncDigest(random, numBits);
 
                 if(stringsAndDigests.containsValue(origDigest)) {
@@ -41,7 +41,7 @@ public class CollideWrapper {
                         foundCollisions.add(toBeAdded);
                         numFoundCollisions++;
                         numAttempts = 0;
-                        stringsAndDigests = new TreeMap<>();
+                        stringsAndDigests.clear();
                     } else {
                         numAttempts++;
                     }

@@ -20,18 +20,18 @@ public class Main {
         assert def23Actual == def23Expected;
 
         List<Integer> bitSizes = CollideWrapper.generateNumBitsArray(11, 25, 10);
-        List<Collision> foundCollisions =  CollideWrapper.collide(bitSizes, 3);
+        List<Collision> collisionsFound =  CollideWrapper.collide(bitSizes, 3);
 
         // Print out
         String collisionFilename = "collisions.txt";
-        printCollisions(collisionFilename, foundCollisions);
+        printCollisions(collisionFilename, collisionsFound);
 
         List<Integer> bitSizes2 = CollideWrapper.generateNumBitsArray(11, 25, 10);
-        List<Collision> foundCollisionsFromPreimage =  PreimageWrapper.preimage(bitSizes2, 3);
+        List<Collision> preimageCollisionsFound =  PreimageWrapper.preimage(bitSizes2, 3);
 
         // Print out
         String preimageFilename = "preimage.txt";
-        printCollisions(preimageFilename, foundCollisionsFromPreimage);
+        printCollisions(preimageFilename, preimageCollisionsFound);
 
         System.out.println("Done");
     }
