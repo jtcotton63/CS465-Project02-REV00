@@ -1,6 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,31 +20,66 @@ public class Main {
         int def23Actual = sha1Helper.getSHA1TruncDigest(def, 23);
         assert def23Actual == def23Expected;
 
-        List<Integer> bitSizes = CollideWrapper.generateNumBitsArray(11, 25, 10);
-        List<Collision> collisionsFound =  CollideWrapper.collide(bitSizes, 3);
+        // Collision
+        List<Integer> bitSizes = CollideWrapper.generateNumBitsArray();
+        Map<Integer, List<Collision>> bitSizesToCollisions =  CollideWrapper.collide(bitSizes, 50);
 
         // Print out
-        String collisionFilename = "collisions.txt";
-        printCollisions(collisionFilename, collisionsFound);
+        printCollisions("collisions-summary.txt", bitSizesToCollisions);
+        printCSV("collisions.csv", bitSizesToCollisions);
 
-        List<Integer> bitSizes2 = CollideWrapper.generateNumBitsArray(11, 25, 10);
-        List<Collision> preimageCollisionsFound =  PreimageWrapper.preimage(bitSizes2, 3);
+        // Preimage
+        List<Integer> bitSizes2 = CollideWrapper.generateNumBitsArray();
+        Map<Integer, List<Collision>> preimageBitSizesToCollisions =  PreimageWrapper.preimage(bitSizes2, 50);
+
 
         // Print out
-        String preimageFilename = "preimage.txt";
-        printCollisions(preimageFilename, preimageCollisionsFound);
+        String preimageFilename = "preimage-summary.txt";
+        printCollisions(preimageFilename, preimageBitSizesToCollisions);
+        printCSV("preimages.csv", preimageBitSizesToCollisions);
 
         System.out.println("Done");
     }
 
-    private static void printCollisions(String filename, List<Collision> collisions) {
+    private static void printCollisions(String filename, Map<Integer, List<Collision>> bitSizesToCollisions) {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(filename);
-            for(int j = 0; j < collisions.size(); j++)
-                writer.print(collisions.get(j).toString());
-        } catch (FileNotFoundException e) {
+            for(Map.Entry<Integer, List<Collision>> entry: bitSizesToCollisions.entrySet())
+                for (int j = 0; j < entry.getValue().size(); j++)
+                    writer.print(entry.getValue().get(j).toString());
 
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if(writer != null) {
+                writer.flush();
+                writer.close();
+            }
+        }
+    }
+
+    private static void printCSV(String filename, Map<Integer, List<Collision>> bitSizesToCollisions) {
+        PrintWriter writer = null;
+        try {
+
+            writer = new PrintWriter(filename);
+            for(Map.Entry<Integer, List<Collision>> entry: bitSizesToCollisions.entrySet()) {
+                // Print the bit size
+                writer.print(entry.getKey() + ",");
+
+                // Print all but the last one
+                for (int j = 0; j < entry.getValue().size() - 1; j++)
+                    writer.print(entry.getValue().get(j).numAttempts + ",");
+
+                // Print the last one
+                writer.print(entry.getValue().get(entry.getValue().size() - 1).numAttempts);
+
+                writer.print("\n");
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             if(writer != null) {
                 writer.flush();
