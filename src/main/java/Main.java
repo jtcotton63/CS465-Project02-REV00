@@ -69,13 +69,10 @@ public class Main {
                 writer.print(entry.getKey() + ",");
 
                 // Print all but the last one
-                for (int j = 0; j < entry.getValue().size() - 1; j++)
+                for (int j = 0; j < entry.getValue().size(); j++)
                     writer.print(entry.getValue().get(j).numAttempts + ",");
 
-                // Print the last one
-                writer.print(entry.getValue().get(entry.getValue().size() - 1).numAttempts);
-
-                writer.print("\n");
+                writer.println();
             }
 
         } catch (FileNotFoundException e) {
